@@ -3,6 +3,7 @@ mapApp.classList.remove('map--faded');
 
 var TITLES = ["Большая уютная квартира", "Маленькая неуютная квартира", "Огромный прекрасный дворец", "Маленький ужасный дворец", "Красивый гостевой домик", "Некрасивый негостеприимный домик", "Уютное бунгало далеко от моря", "Неуютное бунгало по колено в воде"];
 var HOUSE_TYPE = ["palace", "flat", "house", "bungalo"];
+var HOUSE_TYPE_RU = ["Дворец", "Квартира", "Дом", "Бунгало"];
 var CHECKIN = ["12:00", "13:00", "14:00"];
 var CHECKOUT = ["12:00", "13:00", "14:00"];
 var FEATURES = ["wifi", "dishwasher", "parking", "washer", "elevator", "conditioner"];
@@ -73,10 +74,17 @@ var adTemplate = document.querySelector('#card').content.querySelector('.map__ca
 
 var renderAd = function (ad) {
   var adElement = adTemplate.cloneNode(true);
-  adElement.querySelector('popup__title').textContent = ad.offer.title;
-  adElement.querySelector('popup__text--address').textContent = ad.offer.address;
-  adElement.querySelector('popup__text--price').textContent = ad.offer.price + " ₽/ночь";
-  return pinElement;
+  adElement.querySelector('.popup__title').textContent = ad.offer.title;
+  adElement.querySelector('.popup__text--address').textContent = ad.offer.address; // выводятся просто цифры, почему? 
+  adElement.querySelector('.popup__text--price').textContent = ad.offer.price + " ₽/ночь";
+  adElement.querySelector('.popup__type').textContent = HOUSE_TYPE_RU[HOUSE_TYPE.indexOf(ad.offer.type)];
+  adElement.querySelector('.popup__text--capacity').textContent = "" + ad.offer.rooms + " комнаты для " + ad.offer.guests + " гостей";
+  adElement.querySelector('.popup__text--time').textContent = "Заезд после " + ad.offer.checkin + ", выезд до " + ad.offer.checkout;
+  adElement.querySelector('.popup__features').textContent = ad.offer.features;
+  adElement.querySelector('.popup__description').textContent = ad.offer.description; // выводится пустое описание, так ведь не должно быть!
+  adElement.querySelector('.popup__photos').querySelector('.popup__photo').setAttribute("src", "" + ad.offer.photos[0]) // не знаю как вывести 3 штуки и сделать цикл 
+  adElement.querySelector('.popup__avatar').setAttribute("src", "" + ad.author.avatar);
+  return adElement;
 };
 
 var fragmentAd = document.createDocumentFragment();
