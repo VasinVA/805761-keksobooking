@@ -33,7 +33,7 @@ var generateAdsData = function (ADS_QUANTITY) {
     ad.author.avatar = 'img/avatars/user0' + randomInteger(1,8) + '.png';
     ad.offer = {};
     ad.offer.title = TITLES[getRandNum(TITLES)]; // как сделать не повторяющиеся?
-    ad.offer.address = '' + ad.location.x + ', ' + ad.location.y; // это так должно работать?
+    ad.offer.address = ad.location.x + ', ' + ad.location.y; // это так должно работать?
     ad.offer.price = randomInteger(1000, 1000000);
     ad.offer.type = HOUSE_TYPE[getRandNum(HOUSE_TYPE)];
     ad.offer.rooms = randomInteger(1, 5);
@@ -75,14 +75,14 @@ var adTemplate = document.querySelector('#card').content.querySelector('.map__ca
 var renderAd = function (ad) {
   var adElement = adTemplate.cloneNode(true);
   adElement.querySelector('.popup__title').textContent = ad.offer.title;
-  adElement.querySelector('.popup__text--address').textContent = ad.offer.address; // выводятся просто цифры, почему? 
+  adElement.querySelector('.popup__text--address').textContent = ad.offer.address; // выводятся просто цифры, а не адрес. Это норм?
   adElement.querySelector('.popup__text--price').textContent = ad.offer.price + " ₽/ночь";
   adElement.querySelector('.popup__type').textContent = HOUSE_TYPE_RU[HOUSE_TYPE.indexOf(ad.offer.type)];
-  adElement.querySelector('.popup__text--capacity').textContent = "" + ad.offer.rooms + " комнаты для " + ad.offer.guests + " гостей";
+  adElement.querySelector('.popup__text--capacity').textContent = ad.offer.rooms + " комнаты для " + ad.offer.guests + " гостей";
   adElement.querySelector('.popup__text--time').textContent = "Заезд после " + ad.offer.checkin + ", выезд до " + ad.offer.checkout;
   adElement.querySelector('.popup__features').textContent = ad.offer.features;
-  adElement.querySelector('.popup__description').textContent = ad.offer.description; // выводится пустое описание, так ведь не должно быть!
-  adElement.querySelector('.popup__photos').querySelector('.popup__photo').setAttribute("src", "" + ad.offer.photos[0]) // не знаю как вывести 3 штуки и сделать цикл 
+  adElement.querySelector('.popup__description').textContent = ad.offer.description; // выводится пустое описание, это норм?
+  adElement.querySelector('.popup__photos').querySelector('.popup__photo').setAttribute("src", "" + ad.offer.photos[0]) // как вывести 3?
   adElement.querySelector('.popup__avatar').setAttribute("src", "" + ad.author.avatar);
   return adElement;
 };
