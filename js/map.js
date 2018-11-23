@@ -1,19 +1,21 @@
+'use strict';
+
 var mapApp = document.querySelector('.map');
 mapApp.classList.remove('map--faded');
 
-var TITLES = ["Большая уютная квартира", "Маленькая неуютная квартира", "Огромный прекрасный дворец", "Маленький ужасный дворец", "Красивый гостевой домик", "Некрасивый негостеприимный домик", "Уютное бунгало далеко от моря", "Неуютное бунгало по колено в воде"];
-var HOUSE_TYPE = ["palace", "flat", "house", "bungalo"];
-var HOUSE_TYPE_RU = ["Дворец", "Квартира", "Дом", "Бунгало"];
-var CHECKIN = ["12:00", "13:00", "14:00"];
-var CHECKOUT = ["12:00", "13:00", "14:00"];
-var FEATURES = ["wifi", "dishwasher", "parking", "washer", "elevator", "conditioner"];
-var PHOTOS = ["http://o0.github.io/assets/images/tokyo/hotel1.jpg", "http://o0.github.io/assets/images/tokyo/hotel2.jpg", "http://o0.github.io/assets/images/tokyo/hotel3.jpg"];
+var TITLES = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец', 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик', 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'];
+var HOUSE_TYPE = ['palace', 'flat', 'house', 'bungalo'];
+var HOUSE_TYPE_RU = ['Дворец', 'Квартира', 'Дом', 'Бунгало'];
+var CHECKIN = ['12:00', '13:00', '14:00'];
+var CHECKOUT = ['12:00', '13:00', '14:00'];
+var FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
+var PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
 
 var ADS_QUANTITY = 8;
 
 var similarAds = [];
 
-var generateAdsData = function (ADS_QUANTITY) {
+var generateAdsData = function (num) {
   // отдельная функция для генерации случайного число в интервале [min, max]
   function randomInteger(min, max) {
     var rand = min + Math.random() * (max + 1 - min);
@@ -24,13 +26,13 @@ var generateAdsData = function (ADS_QUANTITY) {
   var getRandNum = function (array) {
     return Math.floor(Math.random() * array.length);
   };
-  for (var i = 0; i < ADS_QUANTITY; i++) {
+  for (var i = 0; i < num; i++) {
     var ad = {};
     ad.location = {};
-    ad.location.x = randomInteger(1+65, 980-65);
-    ad.location.y = randomInteger(130+65, 630-65);
+    ad.location.x = randomInteger(1 + 65, 980 - 65);
+    ad.location.y = randomInteger(130 + 65, 630 - 65);
     ad.author = {};
-    ad.author.avatar = 'img/avatars/user0' + randomInteger(1,8) + '.png';
+    ad.author.avatar = 'img/avatars/user0' + randomInteger(1, 8) + '.png';
     ad.offer = {};
     ad.offer.title = TITLES[getRandNum(TITLES)]; // как сделать не повторяющиеся?
     ad.offer.address = ad.location.x + ', ' + ad.location.y; // это так должно работать?
@@ -55,11 +57,11 @@ var pinTemplate = document.querySelector('#pin').content;
 
 var renderPin = function (ad) {
   var pinElement = pinTemplate.cloneNode(true).querySelector('.map__pin');
-  pinElement.setAttribute("style", "left: " + ad.location.x + "px; top: " + ad.location.y + "px;");
+  pinElement.setAttribute('style', 'left: ' + ad.location.x + 'px; top: ' + ad.location.y + 'px;');
   pinElement.children[0].setAttribute('src', ad.author.avatar);
   pinElement.children[0].setAttribute('alt', ad.offer.title);
   return pinElement;
-}
+};
 
 var fragmentPin = document.createDocumentFragment();
 for (var i = 0; i < similarAds.length; i++) {
@@ -76,14 +78,14 @@ var renderAd = function (ad) {
   var adElement = adTemplate.cloneNode(true);
   adElement.querySelector('.popup__title').textContent = ad.offer.title;
   adElement.querySelector('.popup__text--address').textContent = ad.offer.address; // выводятся просто цифры, а не адрес. Это норм?
-  adElement.querySelector('.popup__text--price').textContent = ad.offer.price + " ₽/ночь";
+  adElement.querySelector('.popup__text--price').textContent = ad.offer.price + ' ₽/ночь';
   adElement.querySelector('.popup__type').textContent = HOUSE_TYPE_RU[HOUSE_TYPE.indexOf(ad.offer.type)];
-  adElement.querySelector('.popup__text--capacity').textContent = ad.offer.rooms + " комнаты для " + ad.offer.guests + " гостей";
-  adElement.querySelector('.popup__text--time').textContent = "Заезд после " + ad.offer.checkin + ", выезд до " + ad.offer.checkout;
+  adElement.querySelector('.popup__text--capacity').textContent = ad.offer.rooms + ' комнаты для ' + ad.offer.guests + ' гостей';
+  adElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + ad.offer.checkin + ', выезд до ' + ad.offer.checkout;
   adElement.querySelector('.popup__features').textContent = ad.offer.features;
   adElement.querySelector('.popup__description').textContent = ad.offer.description; // выводится пустое описание, это норм?
-  adElement.querySelector('.popup__photos').querySelector('.popup__photo').setAttribute("src", "" + ad.offer.photos[0]) // как вывести 3?
-  adElement.querySelector('.popup__avatar').setAttribute("src", "" + ad.author.avatar);
+  adElement.querySelector('.popup__photos').querySelector('.popup__photo').setAttribute('src', '' + ad.offer.photos[0]); // как вывести 3?
+  adElement.querySelector('.popup__avatar').setAttribute('src', '' + ad.author.avatar);
   return adElement;
 };
 
