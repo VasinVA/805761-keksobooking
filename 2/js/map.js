@@ -99,7 +99,15 @@ var renderAd = function (ad) {
   adElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + ad.offer.checkin + ', выезд до ' + ad.offer.checkout;
   adElement.querySelector('.popup__features').textContent = ad.offer.features;
   adElement.querySelector('.popup__description').textContent = ad.offer.description;
-  adElement.querySelector('.popup__photos').querySelector('.popup__photo').setAttribute('src', '' + ad.offer.photos[0]); // как вывести 3?
+  // adElement.querySelector('.popup__photos').querySelector('.popup__photo').setAttribute('src', '' + ad.offer.photos[0]); // как вывести 3?
+  var popupPhotosList = adElement.querySelector('.popup__photos'); // куда вставлять
+  var popupPhotoTemplate = popupPhotosList.querySelector('.popup__photo'); // что копировать
+  popupPhotoTemplate.setAttribute('src', '' + PHOTOS[0]); // заполняем первый элемент, чтобы потом было что копировать
+  for (var k = 1; k < PHOTOS.length; k++) {
+    var photoElement = popupPhotoTemplate.cloneNode(true);
+    photoElement.setAttribute('src', '' + PHOTOS[k]);
+    popupPhotosList.appendChild(photoElement);
+  }
   adElement.querySelector('.popup__avatar').setAttribute('src', '' + ad.author.avatar);
   return adElement;
 };
