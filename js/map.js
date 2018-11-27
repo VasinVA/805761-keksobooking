@@ -15,17 +15,32 @@ var ADS_QUANTITY = 8;
 
 var similarAds = [];
 
-var generateAdsData = function (num) {
-  // отдельная функция для генерации случайного число в интервале [min, max]
-  function randomInteger(min, max) {
-    var rand = min + Math.random() * (max + 1 - min);
-    rand = Math.floor(rand);
-    return rand;
+// отдельная функция для генерации случайного число в интервале [min, max]
+function randomInteger(min, max) {
+  var rand = min + Math.random() * (max + 1 - min);
+  rand = Math.floor(rand);
+  return rand;
+}
+
+// отдельная функция для генерации случайного числа, исходя из длины массива на входе
+var getRandNum = function (array) {
+  return Math.floor(Math.random() * array.length);
+};
+
+// отдельная функция для перетасовки массива
+var shuffleArray = function (array) {
+  var x;
+  var j;
+  for (var i = array.length - 1; i > 0; i--) {
+    j = Math.floor(Math.random() * (i + 1));
+    x = array[i];
+    array[i] = array[j];
+    array[j] = x;
   }
-  // отдельная функция для генерации случайного числа, исходя из длины массива на входе
-  var getRandNum = function (array) {
-    return Math.floor(Math.random() * array.length);
-  };
+  return array;
+};
+
+var generateAdsData = function (num) {
   for (var i = 0; i < num; i++) {
     var ad = {};
     ad.location = {};
@@ -34,8 +49,8 @@ var generateAdsData = function (num) {
     ad.author = {};
     ad.author.avatar = 'img/avatars/user0' + randomInteger(1, 8) + '.png';
     ad.offer = {};
-    ad.offer.title = TITLES[getRandNum(TITLES)]; // как сделать не повторяющиеся?
-    ad.offer.address = ad.location.x + ', ' + ad.location.y; // это так должно работать?
+    ad.offer.title = TITLES[i];
+    ad.offer.address = ad.location.x + ', ' + ad.location.y;
     ad.offer.price = randomInteger(1000, 1000000);
     ad.offer.type = HOUSE_TYPE[getRandNum(HOUSE_TYPE)];
     ad.offer.rooms = randomInteger(1, 5);
@@ -44,7 +59,7 @@ var generateAdsData = function (num) {
     ad.offer.checkout = CHECKOUT[getRandNum(CHECKOUT)];
     ad.offer.features = FEATURES.slice(1, randomInteger(2, FEATURES.length));
     ad.offer.description = '';
-    ad.offer.photos = PHOTOS; // как расположить в случайном порядке?
+    ad.offer.photos = shuffleArray(PHOTOS);
     similarAds.push(ad);
   }
 };
@@ -77,13 +92,13 @@ var adTemplate = document.querySelector('#card').content.querySelector('.map__ca
 var renderAd = function (ad) {
   var adElement = adTemplate.cloneNode(true);
   adElement.querySelector('.popup__title').textContent = ad.offer.title;
-  adElement.querySelector('.popup__text--address').textContent = ad.offer.address; // выводятся просто цифры, а не адрес. Это норм?
+  adElement.querySelector('.popup__text--address').textContent = ad.offer.address;
   adElement.querySelector('.popup__text--price').textContent = ad.offer.price + ' ₽/ночь';
   adElement.querySelector('.popup__type').textContent = HOUSE_TYPE_RU[HOUSE_TYPE.indexOf(ad.offer.type)];
   adElement.querySelector('.popup__text--capacity').textContent = ad.offer.rooms + ' комнаты для ' + ad.offer.guests + ' гостей';
   adElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + ad.offer.checkin + ', выезд до ' + ad.offer.checkout;
   adElement.querySelector('.popup__features').textContent = ad.offer.features;
-  adElement.querySelector('.popup__description').textContent = ad.offer.description; // выводится пустое описание, это норм?
+  adElement.querySelector('.popup__description').textContent = ad.offer.description;
   adElement.querySelector('.popup__photos').querySelector('.popup__photo').setAttribute('src', '' + ad.offer.photos[0]); // как вывести 3?
   adElement.querySelector('.popup__avatar').setAttribute('src', '' + ad.author.avatar);
   return adElement;
